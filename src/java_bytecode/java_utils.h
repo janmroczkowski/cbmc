@@ -52,4 +52,6 @@ void merge_source_location_rec(
 /// \return Returns true if 'id' identifies a string literal symbol
 bool is_java_string_literal_id(const irep_idt &id);
 
+const std::string java_class_to_package(const std::string &canonical_classname);
+
 #endif // CPROVER_JAVA_BYTECODE_JAVA_UTILS_H

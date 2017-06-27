@@ -2745,6 +2745,42 @@ void java_bytecode_convert_method(
   java_bytecode_convert_method(class_symbol, method);
 }
 
+const bool java_bytecode_convert_methodt::is_method_inherited(
+  const irep_idt &classname, const irep_idt &methodid) const
+{
+  class_hierarchyt ch;
+  namespacet ns(symbol_table);
+  ch(symbol_table);
+
+  std::string stripped_methodid(id2string(methodid));
+  stripped_methodid.erase(0, classname.size());
+
+  const std::string &classpackage=java_class_to_package(id2string(classname));
+  const auto &parents=ch.get_parents_trans(classname);
+  for(const auto &parent : parents)
+  {
+    const irep_idt id=id2string(parent)+stripped_methodid;
+    const symbolt *symbol;
+    if(!ns.lookup(id, symbol) &&
+       symbol->type.id()==ID_code)
+    {
+      const auto &access=symbol->type.get(ID_access);
+      if(access==ID_public || access==ID_protected)
+        return true;
+      // methods with the default access modifier are only
+      // accessible within the same package.
+      else if(access==ID_default &&
+              java_class_to_package(id2string(parent))==classpackage)
+        return true;
+      else if(access==ID_private)
+        continue;
+      else
+        INVARIANT(false, "Unexpected access modifier.");
+    }
+  }
+  return false;
+}
+
 /// create temporary variables if a write instruction can have undesired side-
 /// effects
 void java_bytecode_convert_methodt::save_stack_entries(
