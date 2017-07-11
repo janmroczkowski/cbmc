@@ -568,6 +568,7 @@ int cbmc_parse_optionst::get_goto_program(
       }
 
       languaget *language=get_language_from_filename(filename);
+      language->get_language_options(cmdline);
 
       if(language==nullptr)
       {
@@ -717,6 +718,7 @@ void cbmc_parse_optionst::preprocessing()
     }
 
     languaget *ptr=get_language_from_filename(filename);
+    ptr->get_language_options(cmdline);
 
     if(ptr==nullptr)
     {
