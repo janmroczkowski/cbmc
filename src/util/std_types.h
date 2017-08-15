@@ -1347,12 +1347,6 @@ public:
   {
   }
 
-  // this one will go away; use the one with width
-  explicit pointer_typet(const typet &_subtype):
-    bitvector_typet(ID_pointer, _subtype)
-  {
-  }
-
   pointer_typet(const typet &_subtype, std::size_t width):
     bitvector_typet(ID_pointer, _subtype, width)
   {
@@ -1395,13 +1389,6 @@ class reference_typet:public pointer_typet
 {
 public:
   reference_typet()
-  {
-    set(ID_C_reference, true);
-  }
-
-  // this one will go away; use the one with width
-  explicit reference_typet(const typet &_subtype):
-    pointer_typet(_subtype)
   {
     set(ID_C_reference, true);
   }
